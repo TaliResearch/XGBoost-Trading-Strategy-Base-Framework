@@ -1,0 +1,41 @@
+# How we can begin to visualize the performance of the trading strategy using Matplotlib. 
+Please note that this is a basic starting point, and in real trading,
+we must consider factors like transaction costs, slippage, and more advanced risk management.
+
+
+# We use Matplotlib to create a line plot of the portfolio values over time. We also mark the buy 
+(green) and sell (red) signals on the plot to visualize when the trading strategy takes action. 
+The x-axis represents time intervals (e.g., daily), and the y-axis represents the portfolio value.
+This visualization provides a high-level view of how the trading strategy's capital evolves over time, 
+with buy and sell signals indicated. In practice, you would use more sophisticated tools 
+and analysis to assess the strategy's performance, including metrics like the Sharpe ratio, 
+drawdown analysis, and backtesting against historical data. 
+Additionally, we consider factors like risk management and transaction costs 
+when evaluating a trading strategy's performance.
+
+
+import matplotlib.pyplot as plt
+
+# Assuming you have calculated portfolio values over time as 'portfolio_values'
+# This should be a list of capital values at each point in time
+
+# Create a time index for the x-axis (e.g., daily time intervals)
+time_index = range(len(portfolio_values))
+
+# Plot portfolio values
+plt.figure(figsize=(12, 6))
+plt.plot(time_index, portfolio_values, label='Portfolio Value', color='blue')
+plt.xlabel('Time')
+plt.ylabel('Portfolio Value')
+plt.title('Trading Strategy Performance')
+plt.legend()
+plt.grid(True)
+
+# Mark buy and sell signals on the plot
+buy_signals = [i for i, signal in enumerate(signals) if signal == 1]
+sell_signals = [i for i, signal in enumerate(signals) if signal == -1]
+plt.scatter(buy_signals, [portfolio_values[i] for i in buy_signals], color='green', marker='^', label='Buy Signal', s=100)
+plt.scatter(sell_signals, [portfolio_values[i] for i in sell_signals], color='red', marker='v', label='Sell Signal', s=100)
+
+plt.legend()
+plt.show()
