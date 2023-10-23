@@ -52,4 +52,4 @@ for signal in signals:
 
     portfolio_values.append(capital)
 
-# You can analyze and visualize portfolio performance over time using libraries like Matplotlib
+# We can analyze and visualize portfolio performance over time using libraries like Matplotlib
