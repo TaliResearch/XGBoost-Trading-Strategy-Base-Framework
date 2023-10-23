@@ -1,0 +1,55 @@
+# A simple example framework of a trading strategy using XGBoost for a basic buy/sell decision based on price predictions. 
+This example uses Python and assumes you have XGBoost and necessary data already loaded.
+Can be used as a starting point of developing a full model and strategy
+
+import pandas as pd
+import xgboost as xgb
+from sklearn.model_selection import train_test_split
+
+# Load historical price and feature data
+data = pd.read_csv('historical_data.csv')
+
+# Assume 'target' is the column containing future price changes (1 for increase, 0 for decrease)
+target = data['target']
+
+# Drop non-feature columns and target column to create the feature set
+features = data.drop(['Date', 'target'], axis=1)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+
+# Create and train an XGBoost model
+model = xgb.XGBClassifier()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Implement a simple trading strategy
+def trading_strategy(predictions, threshold=0.5):
+    signals = [1 if p > threshold else -1 for p in predictions]  # 1 for buy, -1 for sell
+    return signals
+
+threshold = 0.5  # Adjust the threshold as needed
+
+signals = trading_strategy(y_pred, threshold)
+
+# Assume we have a starting capital and an initial position (0 for no position, 1 for long, -1 for short)
+capital = 100000
+position = 0
+current_price = data['Price'].iloc[-1]
+
+# Calculate portfolio value over time
+portfolio_values = [capital]
+
+for signal in signals:
+    if signal == 1 and position == 0:  # Buy signal
+        position = 1
+        capital -= current_price
+    elif signal == -1 and position == 1:  # Sell signal
+        position = 0
+        capital += current_price
+
+    portfolio_values.append(capital)
+
+# You can analyze and visualize portfolio performance over time using libraries like Matplotlib
